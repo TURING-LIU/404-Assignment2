@@ -75,23 +75,35 @@ class HTTPClient(object):
                 done = not part
         return buffer.decode('utf-8')
 
-    def GET(self, url, args=None):
-        body=''
-        path,hostname,port=self.get_host_port(url)
-        self.connect(hostname,port)
+    def getdata(self,path,hostname):
         pl='GET '+path+' HTTP/1.1\r\n'
         hn='Host: '+hostname+'\r\n'
         ac='Accept: */*\r\n'
         cc='Connection: close\r\n\r\n'
-        data=pl+hn+ac+cc
+        return (pl+hn+ac+cc)
+
+    def GET(self, url, args=None):
+        body=''
+        path,hostname,port=self.get_host_port(url)
+        self.connect(hostname,port)
+        data=self.getdata(path,hostname)
         print(data)
         self.sendall(data)
         rdata=self.recvall(self.socket)
-        self.close()
         code=self.get_code(rdata)
         body=body+self.get_body(rdata)
+        self.close()
         print(rdata)
         return HTTPResponse(code, body)
+
+    def postdata(self,path,hostname,bd):
+        pl='POST '+path+' HTTP/1.1\r\n'
+        hn='Host: '+hostname+'\r\n'
+        ac='Accept: */*\r\n'
+        ct='Content-Type: application/x-www-form-urlencoded\r\n'
+        cl='Content-Length: '+str(len(bd))+'\r\n'
+        cc='Connection: close\r\n\r\n'
+        return (pl+hn+ac+ct+cl+cc+bd)
 
     def POST(self, url, args=None):
 
@@ -101,19 +113,13 @@ class HTTPClient(object):
         bd=''
         if args:
             bd=urllib.parse.urlencode(args)
-        pl='POST '+path+' HTTP/1.1\r\n'
-        hn='Host: '+hostname+'\r\n'
-        ac='Accept: */*\r\n'
-        ct='Content-Type: application/x-www-form-urlencoded\r\n'
-        cl='Content-Length: '+str(len(bd))+'\r\n'
-        cc='Connection: close\r\n\r\n'
-        data=pl+hn+ac+ct+cl+cc+bd
+        data=self.postdata(path,hostname,bd)
         print(data)
         self.sendall(data)
         rdata=self.recvall(self.socket)
-        self.close()
         code=self.get_code(rdata)
         body=body+self.get_body(rdata)
+        self.close()
         print(rdata)
         return HTTPResponse(code, body)
 
