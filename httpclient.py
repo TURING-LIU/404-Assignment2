@@ -80,8 +80,8 @@ class HTTPClient(object):
         pl='GET '+path+' HTTP/1.1\r\n'
         hn='Host: '+hostname+'\r\n'
         ac='Accept: */*\r\n'
-        cc='Connection: close\r\n\r\n'
-        return (pl+hn+ac+cc)
+        cc='Connection: close\r\n'
+        return (pl+hn+ac+cc+'\r\n')
 
     def GET(self, url, args=None):
         body=''
@@ -101,10 +101,10 @@ class HTTPClient(object):
         pl='POST '+path+' HTTP/1.1\r\n'
         hn='Host: '+hostname+'\r\n'
         ac='Accept: */*\r\n'
-        ct='Content-Type: application/x-www-form-urlencoded\r\n'
         cl='Content-Length: '+str(len(bd))+'\r\n'
-        cc='Connection: close\r\n\r\n'
-        return (pl+hn+ac+ct+cl+cc+bd)
+        ct='Content-Type: application/x-www-form-urlencoded\r\n'
+        cc='Connection: close\r\n'
+        return (pl+hn+ac+cl+ct+cc+'\r\n'+bd)
 
     def POST(self, url, args=None):
         body=''
