@@ -43,6 +43,7 @@ class HTTPClient(object):
         if not port:
             port=80
         return path,hostname,port
+    
     def connect(self, host, port):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((host, port))
