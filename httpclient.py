@@ -82,8 +82,7 @@ class HTTPClient(object):
         return buffer.decode('utf-8')
 
     def GET(self, url, args=None):
-        code=500
-        body =''
+        body=''
         path,hostname,port=self.get_host_port(url)
         self.connect(hostname,port)
         pl='GET '+path+' HTTP/1.1\r\n'
@@ -101,17 +100,17 @@ class HTTPClient(object):
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
-        code=500
-        body =''
+
+        body=''
         path,hostname,port=self.get_host_port(url)
         self.connect(hostname,port)
         bd=''
         if args:
             bd=urllib.parse.urlencode(args)
-        ct='Content-Type: application/x-www-form-urlencoded\r\n'
         pl='POST '+path+' HTTP/1.1\r\n'
-        ac='Accept: */*\r\n'
         hn='Host: '+hostname+'\r\n'
+        ac='Accept: */*\r\n'
+        ct='Content-Type: application/x-www-form-urlencoded\r\n'
         cl='Content-Length: '+str(len(bd))+'\r\n'
         cc='Connection: close\r\n\r\n'
         data=pl+hn+ac+ct+cl+cc+bd
