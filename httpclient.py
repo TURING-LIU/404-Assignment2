@@ -106,7 +106,6 @@ class HTTPClient(object):
         return (pl+hn+ac+ct+cl+cc+bd)
 
     def POST(self, url, args=None):
-
         body=''
         path,hostname,port=self.get_host_port(url)
         self.connect(hostname,port)
